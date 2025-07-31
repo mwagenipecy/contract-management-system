@@ -95,13 +95,19 @@ class Renew extends Component
     private function calculateNewEndDate()
     {
         $baseDate = $this->contract->end_date;
+    
+        // Ensure values are cast to integers
+        $years = (int) $this->renewal_period_years;
+        $months = (int) $this->renewal_period_months;
+    
         $newDate = $baseDate->copy()
-            ->addYears($this->renewal_period_years)
-            ->addMonths($this->renewal_period_months);
-        
+            ->addYears($years)
+            ->addMonths($months);
+    
         $this->new_end_date = $newDate->format('Y-m-d');
         $this->calculateDuration();
     }
+    
 
     private function calculateSalaryDifference()
     {

@@ -1,4 +1,6 @@
 <x-app-layout>
 
-    <livewire:calendar />
+
+    <livewire:calendar.enhanced />
+
 </x-app-layout>

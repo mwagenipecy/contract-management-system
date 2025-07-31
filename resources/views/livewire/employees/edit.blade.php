@@ -1,6 +1,6 @@
 <div>
-{{-- resources/views/livewire/employees/create.blade.php --}}
-@section('page-title', 'Create Employee')
+{{-- resources/views/livewire/employees/edit.blade.php --}}
+@section('page-title', 'Edit Employee')
 
 <div class="px-4 sm:px-6 lg:px-8">
     {{-- Header --}}
@@ -30,18 +30,26 @@
                         <svg class="flex-shrink-0 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                         </svg>
-                        <span class="ml-4 text-sm font-medium text-gray-500">Create</span>
+                        <a href="{{ route('employees.show', $employee) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{{ $employee->name }}</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="flex-shrink-0 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="ml-4 text-sm font-medium text-gray-500">Edit</span>
                     </div>
                 </li>
             </ol>
         </nav>
         <div class="mt-4">
-            <h1 class="text-2xl font-bold text-gray-900">Create New Employee</h1>
-            <p class="mt-1 text-sm text-gray-600">Add a new employee to the system with their personal and employment information.</p>
+            <h1 class="text-2xl font-bold text-gray-900">Edit Employee</h1>
+            <p class="mt-1 text-sm text-gray-600">Update {{ $employee->name }}'s information and employment details.</p>
         </div>
     </div>
 
-    {{-- Information Notice --}}
+    {{-- Current Employee Summary --}}
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
         <div class="flex">
             <div class="flex-shrink-0">
@@ -50,16 +58,21 @@
                 </svg>
             </div>
             <div class="ml-3">
-                <h3 class="text-sm font-medium text-blue-800">Employee Creation Guidelines</h3>
+                <h3 class="text-sm font-medium text-blue-800">Current Employee Information</h3>
                 <div class="mt-2 text-sm text-blue-700">
-                    <p>Please ensure all required fields (*) are completed. The employee ID is auto-generated but can be customized. After creation, you can add employment contracts and other details.</p>
+                    <p><strong>Employee ID:</strong> {{ $employee->employee_id }} | <strong>Position:</strong> {{ $employee->position }} | <strong>Department:</strong> {{ $employee->department }}</p>
+                    <p><strong>Email:</strong> {{ $employee->email }} | <strong>Status:</strong> 
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $employee->status_badge['color'] }}-100 text-{{ $employee->status_badge['color'] }}-800">
+                            {{ $employee->status_badge['text'] }}
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- Form --}}
-    <form wire:submit.prevent="store">
+    <form wire:submit.prevent="update">
         <div class="space-y-8">
             {{-- Basic Information --}}
             <div class="bg-white shadow rounded-lg">
@@ -69,21 +82,13 @@
                         {{-- Employee ID --}}
                         <div class="sm:col-span-2">
                             <label for="employee_id" class="block text-sm font-medium text-gray-700">Employee ID *</label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
+                            <div class="mt-1">
                                 <input wire:model="employee_id" 
                                        type="text" 
                                        id="employee_id"
                                        required
-                                       class="flex-1 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-l-md @error('employee_id') border-red-300 @enderror">
-                                <button type="button" 
-                                        wire:click="refreshEmployeeId"
-                                        class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 text-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                    </svg>
-                                </button>
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('employee_id') border-red-300 @enderror">
                             </div>
-                            <p class="mt-1 text-xs text-gray-500">Click refresh to generate a new ID</p>
                             @error('employee_id')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -107,6 +112,14 @@
                             @enderror
                         </div>
 
+                        {{-- Last Updated --}}
+                        <div class="sm:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700">Last Updated</label>
+                            <div class="mt-1 text-sm text-gray-500">
+                                {{ $employee->updated_at->format('M d, Y \a\t g:i A') }}
+                            </div>
+                        </div>
+
                         {{-- Full Name --}}
                         <div class="sm:col-span-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">Full Name *</label>
@@ -115,8 +128,7 @@
                                        type="text" 
                                        id="name"
                                        required
-                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('name') border-red-300 @enderror"
-                                       placeholder="Enter employee's full name">
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('name') border-red-300 @enderror">
                             </div>
                             @error('name')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -131,8 +143,7 @@
                                        type="email" 
                                        id="email"
                                        required
-                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('email') border-red-300 @enderror"
-                                       placeholder="employee@company.com">
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('email') border-red-300 @enderror">
                             </div>
                             @error('email')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -146,8 +157,7 @@
                                 <input wire:model="phone" 
                                        type="tel" 
                                        id="phone"
-                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('phone') border-red-300 @enderror"
-                                       placeholder="+1 (555) 123-4567">
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('phone') border-red-300 @enderror">
                             </div>
                             @error('phone')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -163,8 +173,7 @@
                                        id="position"
                                        required
                                        list="common-positions"
-                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('position') border-red-300 @enderror"
-                                       placeholder="e.g., Software Engineer">
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('position') border-red-300 @enderror">
                                 <datalist id="common-positions">
                                     <option value="Software Engineer">
                                     <option value="Senior Developer">
@@ -217,7 +226,6 @@
                                        type="date" 
                                        id="hire_date"
                                        required
-                                       max="{{ date('Y-m-d') }}"
                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('hire_date') border-red-300 @enderror">
                             </div>
                             @error('hire_date')
@@ -255,8 +263,7 @@
                                 <input wire:model="emergency_contact_name" 
                                        type="text" 
                                        id="emergency_contact_name"
-                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('emergency_contact_name') border-red-300 @enderror"
-                                       placeholder="Emergency contact's full name">
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('emergency_contact_name') border-red-300 @enderror">
                             </div>
                             @error('emergency_contact_name')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -270,8 +277,7 @@
                                 <input wire:model="emergency_contact_phone" 
                                        type="tel" 
                                        id="emergency_contact_phone"
-                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('emergency_contact_phone') border-red-300 @enderror"
-                                       placeholder="+1 (555) 123-4567">
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('emergency_contact_phone') border-red-300 @enderror">
                             </div>
                             @error('emergency_contact_phone')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -281,27 +287,55 @@
                 </div>
             </div>
 
-          
+            {{-- Employment History Summary --}}
+            @if($employee->contracts->count() > 0)
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-6">Employment Summary</h3>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <dt class="text-sm font-medium text-gray-500">Total Contracts</dt>
+                            <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ $employee->contracts->count() }}</dd>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <dt class="text-sm font-medium text-gray-500">Active Contract</dt>
+                            <dd class="mt-1 text-2xl font-semibold text-gray-900">
+                                @if($employee->hasActiveContract())
+                                    <span class="text-green-600">Yes</span>
+                                @else
+                                    <span class="text-red-600">No</span>
+                                @endif
+                            </dd>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <dt class="text-sm font-medium text-gray-500">Years of Service</dt>
+                            <dd class="mt-1 text-2xl font-semibold text-gray-900">
+                                {{ $employee->hire_date->diffInYears(now()) }}
+                            </dd>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
 
         {{-- Form Actions --}}
         <div class="pt-8">
             <div class="flex justify-end space-x-3">
-                <a href="{{ route('employment.index') }}" 
+                <a href="{{ route('employees.show', $employee) }}" 
                    class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Cancel
                 </a>
                 <button type="submit" 
                         class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    Create Employee
+                    Update Employee
                 </button>
             </div>
         </div>
     </form>
 </div>
-
 
 </div>

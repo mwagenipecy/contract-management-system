@@ -6,8 +6,10 @@ use Livewire\Component;
 use App\Models\Employee;
 use Illuminate\Validation\Rule;
 
-class Create extends Component
+class Edit extends Component
 {
+    public Employee $employee;
+    
     public $employee_id = '';
     public $name = '';
     public $email = '';
@@ -23,9 +25,9 @@ class Create extends Component
     protected function rules()
     {
         return [
-            'employee_id' => 'required|string|unique:employees,employee_id',
+            'employee_id' => ['required', 'string', Rule::unique('employees', 'employee_id')->ignore($this->employee->id)],
             'name' => 'required|string|min:2|max:255',
-            'email' => 'required|email|unique:employees,email',
+            'email' => ['required', 'email', Rule::unique('employees', 'email')->ignore($this->employee->id)],
             'phone' => 'nullable|string|max:20',
             'position' => 'required|string|max:255',
             'department' => 'required|string|max:255',
@@ -44,20 +46,29 @@ class Create extends Component
         'emergency_contact_phone' => 'emergency contact phone',
     ];
 
-    public function mount()
+    public function mount(Employee $employee)
     {
-        // Set default hire date to today
-        $this->hire_date = now()->format('Y-m-d');
+        $this->employee = $employee;
         
-        // Generate a suggested employee ID (can be customized)
-        $this->employee_id = $this->generateEmployeeId();
+        // Populate form fields with existing data
+        $this->employee_id = $employee->employee_id;
+        $this->name = $employee->name;
+        $this->email = $employee->email;
+        $this->phone = $employee->phone;
+        $this->position = $employee->position;
+        $this->department = $employee->department;
+        $this->hire_date = $employee->hire_date->format('Y-m-d');
+        $this->status = $employee->status;
+        $this->address = $employee->address;
+        $this->emergency_contact_name = $employee->emergency_contact_name;
+        $this->emergency_contact_phone = $employee->emergency_contact_phone;
     }
 
-    public function store()
+    public function update()
     {
         $this->validate();
 
-        $employee = Employee::create([
+        $this->employee->update([
             'employee_id' => $this->employee_id,
             'name' => $this->name,
             'email' => $this->email,
@@ -71,32 +82,17 @@ class Create extends Component
             'emergency_contact_phone' => $this->emergency_contact_phone,
         ]);
 
-        session()->flash('message', 'Employee created successfully!');
+        session()->flash('message', 'Employee updated successfully!');
         
-        return redirect()->route('employees.show', $employee);
-    }
-
-    public function generateEmployeeId()
-    {
-        // Generate employee ID format: EMP + year + sequential number
-        $year = date('Y');
-        $lastEmployee = Employee::whereYear('created_at', $year)
-            ->orderBy('id', 'desc')
-            ->first();
+        return redirect()->route('employees.show', $this->employee);
         
-        $nextNumber = $lastEmployee ? 
-            (int)substr($lastEmployee->employee_id, -4) + 1 : 1;
-        
-        return 'EMP' . $year . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-    }
-
-    public function refreshEmployeeId()
-    {
-        $this->employee_id = $this->generateEmployeeId();
     }
 
     public function render()
     {
-        return view('livewire.employees.create');
+        return view('livewire.employees.edit');
+
     }
+
+
 }

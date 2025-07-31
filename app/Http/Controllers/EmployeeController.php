@@ -20,4 +20,16 @@ class EmployeeController extends Controller
         $employee=Employee::find($employee);
         return view('pages.employee.show',['employee'=>$employee]);
     }
+
+    public function edit($employee){
+
+        $employee=Employee::find($employee);
+        return view('pages.employee.edit',['employee'=>$employee]);
+    }
+
+
+    public function create(){
+
+        return view('pages.employee.create');
+    }
 }
