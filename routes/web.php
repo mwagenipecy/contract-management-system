@@ -37,6 +37,11 @@ Route::middleware([
 
 
 
+    Route::get('/reminders/setting',[ReminderController::class,'reminderSetting'])->name('reminders.index');
+
+    Route::get('reminders/settings',[ReminderController::class,'show'])->name('reminders.indexs');
+
+    
 
     ////// employment routes
 
@@ -89,9 +94,6 @@ Route::middleware([
     Route::get('/reminders/{id}/edit',[ReminderController::class,'edit'])->name('reminders.edit');
     Route::post('/reminders/{id}/complete',[ReminderController::class,'complete'])->name('reminders.complete');
     Route::post('/reminders/renew',[ReminderController::class,'renew'])->name('calendar.index');
-
-    Route::post('/reminders/settings',[ReminderController::class,'show'])->name('reminders.settings');
-
 
 
 
