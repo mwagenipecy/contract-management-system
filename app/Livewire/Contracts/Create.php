@@ -124,7 +124,59 @@ class Create extends Component
             'created_by' => auth()->id(),
         ]);
 
-        session()->flash('message', 'Contract created successfully!');
+
+         // Get the employee for notifications
+    $employee = Employee::find($this->employee_id);
+
+    // Send contract creation notification
+    dispatch(new \App\Jobs\SendEmployeeNotification(
+        $employee,
+        'contract_created',
+        'Contract Created',
+        [
+            'contract' => $contract,
+            'message' => 'Your new contract has been created and is now active.',
+        ]
+    ));
+
+        // Schedule contract renewal notification if applicable
+    if ($contract->end_date && $contract->renewal_notice_period) {
+        $notificationDate = \Carbon\Carbon::parse($contract->end_date)
+            ->subDays($contract->renewal_notice_period);
+
+        if ($notificationDate->isFuture()) {
+            dispatch(new \App\Jobs\SendEmployeeNotification(
+                $employee,
+                'contract_renewal_reminder',
+                'Contract Renewal Reminder',
+                [
+                    'contract' => $contract,
+                    'days_until_expiry' => $contract->renewal_notice_period,
+                ]
+            ))->delay($notificationDate);
+        }
+    }
+
+    
+    // Notify HR/Admin about contract creation
+    $hrUsers = \App\Models\User::where('id', 1)->get();
+    foreach ($hrUsers as $hrUser) {
+        dispatch(new \App\Jobs\SendAdminNotification(
+            $hrUser,
+            'contract_created_admin',
+            'New Contract Created',
+            [
+                'contract' => $contract,
+                'employee' => $employee,
+                'created_by' => auth()->user()->name,
+            ]
+        ));
+    }
+
+    session()->flash('message', 'Contract created successfully! Notifications have been sent.');
+    
+
+
         
         return redirect()->route('contracts.show', $contract);
     }

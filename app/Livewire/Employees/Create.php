@@ -73,6 +73,27 @@ class Create extends Component
 
         session()->flash('message', 'Employee created successfully!');
         
+
+           // Dispatch SMS notification
+    dispatch(new \App\Jobs\SendSmsNotification(
+        $employee->phone,
+        "Welcome to the team, {$employee->name}! Your employee ID is {$employee->employee_id}. We're excited to have you join us in the {$employee->department} department."
+    ));
+
+    // Dispatch Email notification
+    dispatch(new \App\Jobs\SendEmailNotification(
+        $employee->email,
+        $employee->name,
+        'Welcome to Our Company',
+        [
+            'employee' => $employee,
+            'welcome_message' => 'We are thrilled to welcome you to our team!',
+            'start_date' => $employee->hire_date,
+        ]
+    ));
+
+
+    
         return redirect()->route('employees.show', $employee);
     }
 
