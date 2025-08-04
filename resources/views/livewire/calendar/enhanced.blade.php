@@ -5,7 +5,7 @@
     {{-- Header --}}
     <div class="sm:flex sm:items-center sm:justify-between mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Enhanced Calendar</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Dashboard </h1>
             <p class="mt-2 text-sm text-gray-700">View contracts, reminders, and important dates in one place.</p>
         </div>
         <div class="mt-4 sm:mt-0 sm:flex sm:space-x-3">
@@ -625,6 +625,8 @@
                                                         View Details
                                                     </a>
                                                 @endif
+
+                                                
                                             </div>
                                         </div>
                                     </div>

@@ -330,4 +330,64 @@ class Promotion extends Model
             'cancelled' => 'Cancelled',
         ];
     }
+
+    public function hasAttachments(): bool
+    {
+        return !empty($this->attachments);
+    }
+
+
+    public function getAttachmentCount(): int
+    {
+        return $this->attachments ? count($this->attachments) : 0;
+    }
+
+    public function getTotalAttachmentSize(): int
+    {
+        if (!$this->attachments) {
+            return 0;
+        }
+
+        return collect($this->attachments)->sum('size');
+    }
+
+    public function markAsSent(): void
+    {
+        $this->update([
+            'status' => 'sent',
+            'sent_at' => now(),
+        ]);
+    }
+
+    public function isSent(): bool
+    {
+        return $this->status === 'sent';
+    }
+
+    public function canBeEdited(): bool
+    {
+        return in_array($this->status, ['draft', 'scheduled']);
+    }
+
+    public function canBeSent(): bool
+    {
+        return $this->status === 'draft' && $this->is_active;
+    }
+    public function getDeliveryStats(): array
+    {
+        $stats = [
+            'total' => $this->deliveries()->count(),
+            'sent' => $this->deliveries()->where('status', 'sent')->count(),
+            'failed' => $this->deliveries()->where('status', 'failed')->count(),
+            'pending' => $this->deliveries()->where('status', 'pending')->count(),
+        ];
+
+        $stats['success_rate'] = $stats['total'] > 0 
+            ? round(($stats['sent'] / $stats['total']) * 100, 2) 
+            : 0;
+
+        return $stats;
+    }
+
+    
 }

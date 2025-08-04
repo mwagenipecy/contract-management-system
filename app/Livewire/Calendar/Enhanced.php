@@ -361,7 +361,7 @@ class Enhanced extends Component
                     'url' => route('reminders.show', $item),
                     'actions' => [
                         ['label' => 'View Details', 'url' => route('reminders.show', $item)],
-                        ['label' => 'Update Item', 'url' => route('reminders.edit', $item)],
+                        ['label' => 'Update Item', 'url' => route('reminders.show', $item)],
                     ]
                 ]);
             }
