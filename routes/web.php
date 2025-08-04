@@ -8,6 +8,7 @@ use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TrackingController;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TwoFactorEmailController;
@@ -17,12 +18,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 
-Route::middleware('web')->group(function () {
-    Route::get('/register', fn () => abort(404));
-    Route::get('/forgot-password', fn () => abort(404));
-    Route::get('/reset-password', fn () => abort(404));
-    Route::get('/verify-email', fn () => abort(404));
-});
+// Route::middleware('web')->group(function () {
+//     Route::get('/register', fn () => abort(404));
+//     Route::get('/forgot-password', fn () => abort(404));
+//     Route::get('/reset-password', fn () => abort(404));
+//     Route::get('/verify-email', fn () => abort(404));
+// });
 
 
 
@@ -33,6 +34,8 @@ Route::middleware('guest')->group(function () {
         return view('auth.login');
     })->name('login');
 
+
+    
     // Handle login submission
     Route::post('/email', function (Request $request) {
         $request->validate([
@@ -110,9 +113,36 @@ Route::middleware('guest')->group(function () {
 
     // OTP verification routes
     Route::get('/otp', [OtpController::class, 'show'])->name('otp.show');
+
     Route::post('/otp/verify', [OtpController::class, 'verify'])->name('otp.verify');
     Route::post('/otp/resend', [OtpController::class, 'resend'])->name('otp.resend');
 });
+
+
+
+
+
+// Logout route
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/');
+})->middleware('auth')->name('logout');
+
+
+
+// Protected routes
+Route::middleware(['auth', 'otp.required'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    
+    // Route::get('/profile', function () {
+    //     return view('profile.show');
+    // })->name('profile.show');
+});
+
 
 
 
@@ -192,6 +222,10 @@ Route::middleware([
     Route::post('/reminders/{id}/complete',[ReminderController::class,'complete'])->name('reminders.complete');
     Route::post('/reminders/renew',[ReminderController::class,'renew'])->name('calendar.index');
 
+
+    /// user management controller 
+
+    Route::get('user-index',[UserManagementController::class,'index'])->name('users.index');
 
     // report section 
 

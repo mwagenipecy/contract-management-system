@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Broadcasting\BeemSmsChannel;
 use Illuminate\Notifications\ChannelManager;
+use App\Http\Middleware\RequireOtpVerification;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->make(ChannelManager::class)->extend('beem', function ($app) {
             return new BeemSmsChannel();
         });
+
+
+        Route::aliasMiddleware('otp.required', RequireOtpVerification::class);
+
     
     }
 }

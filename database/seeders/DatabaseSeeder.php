@@ -15,14 +15,19 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $this->call([
-            // EmployeeSeeder::class,
-            // ContractSeeder::class,
-            // SystemSettingsSeeder::class,
-           // ReminderSystemSeeder::class,
-            UserSeeder::class,
+        // $this->call([
+        //     // EmployeeSeeder::class,
+        //     // ContractSeeder::class,
+        //     // SystemSettingsSeeder::class,
+        //    // ReminderSystemSeeder::class,
+        //     UserSeeder::class,
 
-        ]);
+            
+        // ]);
+
+
+        $this->call(DepartmentSeeder::class);
+
 
         
     }
