@@ -1,3 +1,4 @@
+
 {{-- resources/views/layouts/app.blade.php --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -272,85 +273,143 @@
                 <!-- Mobile Navigation -->
                 <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-white shadow-lg">
                     <!-- Mobile Logo -->
-                    <div class="flex items-center flex-shrink-0 px-6 mb-8">
-                        <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-brand-blue to-brand-pink flex items-center justify-center shadow-md">
-                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <span class="text-xl font-bold text-brand-blue">Memoirex</span>
-                            <p class="text-xs text-brand-pink -mt-1 font-medium">Management System</p>
-                        </div>
+                    <div class="flex items-center flex-shrink-0 px-6 mb-2">
+                        <img class="h-24 justify-center items-center ml-4" src="{{ asset('/logoV1.png') }}" alt="Memoirex Logo" /> 
                     </div>
 
-                    <!-- Mobile Navigation (simplified version) -->
+                    <!-- Mobile Navigation - Complete Match with Desktop -->
                     <div class="flex-grow flex flex-col">
                         <nav class="flex-1 px-4 space-y-2">
-                            <!-- Dashboard -->
-                            <a href="{{ route('dashboard') }}" 
-                               @click="sidebarOpen = false"
-                               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-brand-blue border-r-4 border-brand-blue shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm' }}">
-                                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                                </svg>
-                                Dashboard
-                            </a>
+                            <!-- Main Section -->
+                            <div class="space-y-1">
+                                <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Main</p>
+                                
+                                <!-- Dashboard -->
+                                <a href="{{ route('dashboard') }}" 
+                                   @click="sidebarOpen = false"
+                                   class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-brand-blue border-r-4 border-brand-blue shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm' }}">
+                                    <svg class="mr-3 h-5 w-5 {{ request()->routeIs('dashboard') ? 'text-brand-blue' : 'text-gray-400 group-hover:text-brand-blue' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h2a2 2 0 012 2v2H8V5z"></path>
+                                    </svg>
+                                    Dashboard
+                                    @if(request()->routeIs('dashboard'))
+                                        <div class="ml-auto w-2 h-2 bg-brand-pink rounded-full"></div>
+                                    @endif
+                                </a>
+                            </div>
 
-                            <!-- Employees -->
-                            <a href="{{ route('employment.index') }}" 
-                               @click="sidebarOpen = false"
-                               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm">
-                                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1z"></path>
-                                </svg>
-                                Employees
-                            </a>
+                            <!-- Employee Management Section -->
+                            <div class="space-y-1 pt-4">
+                                <p class="px-3 text-xs font-semibold text-brand-pink uppercase tracking-wider">Employee Management</p>
+                                
+                                <!-- Employee Management -->
+                                <a href="{{ route('employment.index') }}" 
+                                   @click="sidebarOpen = false"
+                                   class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('employment.*') ? 'bg-blue-50 text-brand-blue border-r-4 border-brand-blue shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm' }}">
+                                    <svg class="mr-3 h-5 w-5 {{ request()->routeIs('employment.*') ? 'text-brand-blue' : 'text-gray-400 group-hover:text-brand-blue' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                    </svg>
+                                    Employees
+                                    @if(request()->routeIs('employment.*'))
+                                        <div class="ml-auto w-2 h-2 bg-brand-pink rounded-full"></div>
+                                    @endif
+                                </a>
+                            </div>
 
-                            <!-- Contracts -->
-                            <a href="{{ route('contract.index') }}" 
-                               @click="sidebarOpen = false"
-                               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm">
-                                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                                Contracts
-                            </a>
+                            <!-- Contract Management Section -->
+                            <div class="space-y-1 pt-4">
+                                <p class="px-3 text-xs font-semibold text-brand-pink uppercase tracking-wider">Contract Management</p>
+                                
+                                <!-- Contract Management -->
+                                <a href="{{ route('contract.index') }}" 
+                                   @click="sidebarOpen = false"
+                                   class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('contract.*') ? 'bg-blue-50 text-brand-blue border-r-4 border-brand-blue shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm' }}">
+                                    <svg class="mr-3 h-5 w-5 {{ request()->routeIs('contract.*') ? 'text-brand-blue' : 'text-gray-400 group-hover:text-brand-blue' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    Contracts
+                                    @if(request()->routeIs('contract.*'))
+                                        <div class="ml-auto w-2 h-2 bg-brand-pink rounded-full"></div>
+                                    @endif
+                                </a>
 
-                            <!-- Notifications -->
-                            <a href="{{ route('notification.index') }}" 
-                               @click="sidebarOpen = false"
-                               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm">
-                                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM15 17H9a4 4 0 01-4-4V8a4 4 0 014-4h6a4 4 0 014 4v9z"></path>
-                                </svg>
-                                Notifications
-                                <span class="ml-auto bg-brand-pink bg-opacity-10 text-brand-pink text-xs px-2 py-1 rounded-full font-medium">3</span>
-                            </a>
+                                <!-- Contract Tracking -->
+                                <a href="{{ route('tracking.index') }}" 
+                                   @click="sidebarOpen = false"
+                                   class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('tracking.*') ? 'bg-blue-50 text-brand-blue border-r-4 border-brand-blue shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm' }}">
+                                    <svg class="mr-3 h-5 w-5 {{ request()->routeIs('tracking.*') ? 'text-brand-blue' : 'text-gray-400 group-hover:text-brand-blue' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                    Contract Tracking
+                                    @if(request()->routeIs('tracking.*'))
+                                        <div class="ml-auto w-2 h-2 bg-brand-pink rounded-full"></div>
+                                    @endif
+                                </a>
 
-                            <!-- Settings -->
-                            <a href="{{ route('setting.index') }}" 
+                                <!-- Reminders Dashboard -->
+                                <a href="{{ route('reminders.dashboard') }}" 
+                                   @click="sidebarOpen = false"
+                                   class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('reminders*') ? 'bg-blue-50 text-brand-blue border-r-4 border-brand-blue shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm' }}">
+                                    <svg class="mr-3 h-5 w-5 {{ request()->routeIs('reminders.*') ? 'text-brand-blue' : 'text-gray-400 group-hover:text-brand-blue' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Reminders Dashboard
+                                    @if(request()->routeIs('reminders.*'))
+                                        <div class="ml-auto w-2 h-2 bg-brand-pink rounded-full"></div>
+                                    @endif
+                                </a>
+                            </div>
+
+                            <!-- Notifications & Alerts Section -->
+                            <div class="space-y-1 pt-4">
+                                <p class="px-3 text-xs font-semibold text-brand-pink uppercase tracking-wider">Notifications & Alerts</p>
+                                
+                                <!-- Promotions -->
+                                <a href="{{ route('promotion.index') }}" 
+                                   @click="sidebarOpen = false"
+                                   class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('promotion.*') ? 'bg-blue-50 text-brand-blue border-r-4 border-brand-blue shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm' }}">
+                                    <svg class="mr-3 h-5 w-5 {{ request()->routeIs('promotion.*') ? 'text-brand-blue' : 'text-gray-400 group-hover:text-brand-blue' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                    </svg>
+                                    Promotions
+                                    @if(request()->routeIs('promotion.*'))
+                                        <div class="ml-auto w-2 h-2 bg-brand-pink rounded-full"></div>
+                                    @endif
+                                </a>
+                            </div>
+
+                            <!-- Reports & Analytics Section -->
+                            <div class="space-y-1 pt-4">
+                                <p class="px-3 text-xs font-semibold text-brand-pink uppercase tracking-wider">Reports & Analytics</p>
+                                
+                                <!-- Reports -->
+                                <a href="{{ route('reports.dashboard') }}" 
+                                   @click="sidebarOpen = false"
+                                   class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('reports.*') ? 'bg-blue-50 text-brand-blue border-r-4 border-brand-blue shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm' }}">
+                                    <svg class="mr-3 h-5 w-5 {{ request()->routeIs('reports.*') ? 'text-brand-blue' : 'text-gray-400 group-hover:text-brand-blue' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    Reports
+                                    @if(request()->routeIs('reports.*'))
+                                        <div class="ml-auto w-2 h-2 bg-brand-pink rounded-full"></div>
+                                    @endif
+                                </a>
+                            </div>
+
+                            <!-- User Management -->
+                            <a href="{{ route('users.index') }}" 
                                @click="sidebarOpen = false"
-                               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm">
-                                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('users.*') ? 'bg-blue-50 text-brand-blue border-r-4 border-brand-blue shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm' }}">
+                                <svg class="mr-3 h-5 w-5 {{ request()->routeIs('users.*') ? 'text-brand-blue' : 'text-gray-400 group-hover:text-brand-blue' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
-                                Settings
-                            </a>
-
-
-                            <a href="{{ route('users.index') }}" 
-                               @click="sidebarOpen = false"
-                               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:shadow-sm">
-                                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1z"></path>
-                                </svg>
                                 User Management
+                                @if(request()->routeIs('users.*'))
+                                    <div class="ml-auto w-2 h-2 bg-brand-pink rounded-full"></div>
+                                @endif
                             </a>
-
-
-
                         </nav>
                     </div>
 
@@ -358,7 +417,7 @@
                     <div class="flex-shrink-0 border-t border-gray-200 p-4 bg-gray-50">
                         <div class="flex items-center group hover:bg-white rounded-lg p-2 transition-colors duration-200">
                             <div class="flex-shrink-0">
-                                <div class="h-10 w-10 rounded-full bg-gradient-to-br from-brand-blue to-brand-pink flex items-center justify-center shadow-md">
+                                <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-800 to-blue-700 flex items-center justify-center shadow-md">
                                     <span class="text-sm font-semibold text-white">{{ substr(auth()->user()->name ?? 'U', 0, 1) }}</span>
                                 </div>
                             </div>
@@ -404,29 +463,19 @@
                     
                     <!-- Top bar actions -->
                     <div class="ml-4 flex items-center md:ml-6 space-x-4">
-                      
-
-                      
-
                         <!-- User menu dropdown -->
                         <div class="relative" x-data="{ open: false }">
-                        <div class="flex">
-
-                        <div class="text-sm flex justify-center items-center mx-4 font-bold ">                         {{ auth()->user()->name }}
-                        </div>
-
-                        <button @click="open = !open" class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue transition-all duration-200">
-                                <div class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-900 to-blue-800 flex items-center justify-center shadow-md">
-                                    <span class="text-sm font-semibold text-white">{{ substr(auth()->user()->name ?? 'U', 0, 1) }}</span>
+                            <div class="flex">
+                                <div class="text-sm flex justify-center items-center mx-4 font-bold">                         
+                                    {{ auth()->user()->name }}
                                 </div>
 
-                                
-                            </button>
-
-                        </div>
-                           
-
-                            
+                                <button @click="open = !open" class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue transition-all duration-200">
+                                    <div class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-900 to-blue-800 flex items-center justify-center shadow-md">
+                                        <span class="text-sm font-semibold text-white">{{ substr(auth()->user()->name ?? 'U', 0, 1) }}</span>
+                                    </div>
+                                </button>
+                            </div>
                             
                             <div x-show="open" 
                                  @click.away="open = false"
@@ -442,8 +491,6 @@
                                         <p class="font-medium text-brand-blue">{{ auth()->user()->name ?? 'User' }}</p>
                                         <p class="text-xs text-gray-500">{{ auth()->user()->email ?? 'user@example.com' }}</p>
                                     </div>
-                                    <!-- <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-brand-blue transition-colors duration-200">Your Profile</a> -->
-                                    <!-- <a href="{{ route('setting.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-brand-blue transition-colors duration-200">Settings</a> -->
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-brand-pink transition-colors duration-200">
